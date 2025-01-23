@@ -1,0 +1,68 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "flwr_xgb"
+version = "2.0.0"
+description = "Federated Learning with XGBoost and Flower"
+license = "Apache-2.0"
+dependencies = [
+    "flwr[simulation]>=1.14.0",
+    "flwr-datasets>=0.4.0",
+    "xgboost>=2.0.0",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["."]
+
+[tool.flwr.app]
+publisher = "flwrlabs"
+
+[tool.flwr.app.components]
+serverapp = "flwr_xgb.server_app:app"
+clientapp = "flwr_xgb.client_app:app"
+
+
+[tool.flwr.app.config]
+# ServerApp
+num-server-rounds = 8       # 5 clients, w and w/o SMOTE
+# num-server-rounds = 8     # 10 clients for skewed age/edu/gender
+# num-server-rounds = 11    # 50 clients run with SMOTE; same no. without SMOTE
+# num-server-rounds = 15    # 200 clients run w and w/o SMOTE
+
+fraction-fit = 0.8          # run for 5 clients, w and w/o SMOTE
+# fraction-fit = 0.5        # run for 10 clients, for age/edu/gender
+# fraction-fit = 0.8        # run for 50 clients, w and w/o SMOTE
+# fraction-fit = 0.3        # run with 200 clients, w and w/o SMOTE
+fraction-evaluate = 1.0
+
+
+
+# ClientApp
+local-epochs = 3
+params.objective = "binary:logistic"
+params.eta = 0.08           # Learning rate for 5 clients, w and w/o SMOTE
+# params.eta = 0.03         # Learning rate for age/edu/gender
+# params.eta = 0.04         # Learning rate for 50 clients, w and w/o SMOTE
+# params.eta = 0.01         # Learning rate for 200 clients, w and w/o SMOTE
+
+params.max-depth = 6
+params.eval-metric = "auc"
+params.nthread = 4
+params.num-parallel-tree = 1
+params.subsample = 0.8     # subsample for 5 clients, w and w/o SMOTE
+# params.subsample = 0.6   # subsample for 10 clients, age/edu/gender
+# params.subsample = 0.8    # subsample for 50 clients, w and w/o SMOTE
+# params.subsample = 0.8    # subsample for 200 clients, w and w/o SMOTE
+
+params.tree-method = "hist"
+
+[tool.flwr.federations]
+default = "local-simulation"
+
+[tool.flwr.federations.local-simulation]
+options.num-supernodes = 5
+# options.num-supernodes = 10
+# options.num-supernodes = 50
+# options.num-supernodes = 200
