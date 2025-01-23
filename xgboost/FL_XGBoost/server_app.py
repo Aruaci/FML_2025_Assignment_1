@@ -14,7 +14,9 @@ def evaluate_metrics_aggregation(eval_metrics):
     )
     metrics_aggregated = {"AUC": auc_aggregated}
 
-    global_model_bytes = eval_metrics[0][1].get("global_model_bytes")  # Beispielzugriff
+
+    global_model_bytes = eval_metrics[0][1].get("global_model_bytes")
+
     if global_model_bytes:
         with open("global_model.json", "wb") as f:
             f.write(global_model_bytes)
