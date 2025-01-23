@@ -5,8 +5,8 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 
-train_df = pd.read_csv("/Users/annina/Documents/FH/FHStPoelten/FML/assignment1/assignment_1/adult_train.csv")
-test_df = pd.read_csv("/Users/annina/Documents/FH/FHStPoelten/FML/assignment1/assignment_1/adult_test.csv")
+train_df = pd.read_csv("../adult_train.csv")
+test_df = pd.read_csv("../adult_test.csv")
 
 X_train, y_train = train_df.drop("income", axis=1), train_df["income"]
 X_test, y_test = test_df.drop("income", axis=1), test_df["income"]
